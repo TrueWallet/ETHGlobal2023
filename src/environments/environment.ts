@@ -1,1 +1,6 @@
-export const environment = {};
+export const environment = {
+    factorySC: '',
+    entrypointSC: '',
+    rpcProviderUrl: '',
+    fbAppId: '',
+};
