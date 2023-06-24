@@ -19,6 +19,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SendComponent } from './partials/send/send.component';
 import {MatSelectModule} from "@angular/material/select";
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import {MatSelectModule} from "@angular/material/select";
     MatToolbarModule,
     MatDialogModule,
     MatSelectModule,
-    FormsModule
+    FormsModule,
+    MatSnackBarModule
   ],
 
   providers:[

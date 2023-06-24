@@ -1,3 +1,4 @@
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import {BigNumber, ethers} from 'ethers';
@@ -27,7 +28,9 @@ export class WalletService {
     return this.walletSC.address;
   }
 
-  constructor() {
+  constructor(
+    private snackBar: MatSnackBar
+  ) {
     const pk = localStorage.getItem(StorageKeys.ownerPk);
     this.provider = new ethers.providers.JsonRpcProvider(environment.rpcProviderUrl);
 
@@ -37,6 +40,16 @@ export class WalletService {
     const walletAddress = localStorage.getItem(StorageKeys.walletAddress);
     this.walletSC = new ethers.Contract(<string>walletAddress, WalletAbi, this.walletOwner);
     this.factorySC = new ethers.Contract(environment.factorySC, FactoryAbi, this.walletOwner);
+
+    this.checkOwner();
+  }
+
+  async checkOwner(): Promise<any> {
+    const owner = await this.walletSC['owner']();
+    if (owner.toLowerCase() !== this.walletOwner.address.toLowerCase()) {
+      localStorage.clear();
+      this.snackBar.open("You are not the owner anymore.")
+    }
   }
 
   async addGuardian(guardian: string): Promise<any> {
@@ -59,6 +72,15 @@ export class WalletService {
 
       return {guardian, hash, requested, executed};
     }));
+  }
+
+  async cancelGuardian(item: any): Promise<any> {
+    const owner = await this.walletSC['owner']();
+
+    console.log('Wallet SC Owner', owner);
+
+    const response = await this.walletSC['cancelRecovery'](item.hash, {gasLimit: 1_000_000});
+    return response.wait();
   }
 
   async isDeployed(): Promise<WalletState> {
@@ -113,8 +135,17 @@ export class WalletService {
     const signature = toRpcSig(sig.v, sig.r, sig.s);
     builder.setSignature(signature);
 
+    console.log(builder);
+
     const response = await client.sendUserOperation(builder);
-    return await response.wait();
+    console.log('response', response);
+    try {
+      const data = await response.wait();
+      return data;
+    } catch (error) {
+      console.log(error)
+    }
+    
   }
 
   async getBalancesERC20(supportedERC20: any[]): Promise<any> {

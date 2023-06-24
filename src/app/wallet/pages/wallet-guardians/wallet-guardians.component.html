@@ -17,6 +17,7 @@
     <div class="guardians-list" *ngIf="guardians.length else empty">
       <div *ngFor="let item of guardians">
         {{item.guardian}}
+        <button type="button" *ngIf="item.requested && !item.executed" [disabled]="loading" mat-flat-button color="warn" (click)="cancel(item)">Cancel</button>
       </div>
     </div>
 
