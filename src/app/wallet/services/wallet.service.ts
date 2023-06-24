@@ -106,7 +106,16 @@ export class WalletService {
     const signature = toRpcSig(sig.v, sig.r, sig.s);
     builder.setSignature(signature);
 
+    console.log(builder);
+
     const response = await client.sendUserOperation(builder);
-    return await response.wait();
+    console.log('response', response);
+    try {
+      const data = await response.wait();
+      return data;
+    } catch (error) {
+      console.log(error)
+    }
+    
   }
 }

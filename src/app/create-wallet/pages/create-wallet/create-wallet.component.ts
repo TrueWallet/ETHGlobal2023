@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { finalize, from } from 'rxjs';
 import { CreateWalletService } from '../../services/create-wallet.service';
+import { RestoreWalletComponent } from '../../partials/restore-wallet/restore-wallet.component';
 
 @Component({
   selector: 'app-create-wallet',
@@ -13,7 +15,8 @@ export class CreateWalletComponent {
 
   constructor(
     private service: CreateWalletService,
-    private router: Router
+    private dialog: MatDialog,
+    private router: Router,
   ) {
   }
 
@@ -23,6 +26,15 @@ export class CreateWalletComponent {
       finalize(() => this.loading = false)
     ).subscribe(() => {
       this.router.navigate(['/'], {replaceUrl: true});
+    });
+  }
+
+  restoreWallet() {
+    this.dialog.open(RestoreWalletComponent, {
+      width: '600px',
+      maxWidth: 'calc(100% - 32px)',
+      closeOnNavigation: true,
+      disableClose: true
     });
   }
 
