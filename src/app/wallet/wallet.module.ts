@@ -10,9 +10,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { WalletService } from './services/wallet.service';
-import {MatCardModule} from "@angular/material/card";
-import {MatCheckboxModule} from "@angular/material/checkbox";
-import {MatTableModule} from "@angular/material/table";
+import { MatCardModule } from "@angular/material/card";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatTableModule } from "@angular/material/table";
+import { ClipboardModule } from "@angular/cdk/clipboard";
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
@@ -30,8 +34,13 @@ import {MatTableModule} from "@angular/material/table";
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
-    MatTableModule
+    MatTableModule,
+    ClipboardModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatDialogModule
   ],
+
   providers:[
     WalletService
   ]
