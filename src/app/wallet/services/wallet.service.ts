@@ -5,7 +5,7 @@ import { StorageKeys } from 'src/app/core/constants/storage-keys';
 import { WalletAbi } from 'src/app/core/constants/abis/wallet-abi';
 import {WalletState} from "../constants/wallet-state";
 import {FactoryAbi} from "../../core/constants/abis/factory-abi";
-import {Client, UserOperationBuilder} from "userop";
+import {Client, Presets, UserOperationBuilder} from "userop";
 import {EntrypointAbi} from "../../core/constants/abis/entrypoint-abi";
 import { ecsign, toRpcSig, keccak256 as keccak256_buffer } from 'ethereumjs-util';
 import { Buffer } from 'buffer';
@@ -123,5 +123,104 @@ export class WalletService {
       const balance = await contract['balanceOf'](this.walletSC.address);
       return { ...erc20, balance: ethers.utils.formatUnits(balance, erc20.decimals) };
     }));
+  }
+
+  async sendNative(data: {to: string, amount: string, selectedFee: string}): Promise<any> {
+    const paymasterMiddleware = Presets.Middleware.verifyingPaymaster(
+      environment.stackuPaymasterConfig.rpcUrl,
+      environment.stackuPaymasterConfig.context,
+    );
+
+    const sa = await Presets.Builder.SimpleAccount.init(
+      this.walletOwner,
+      environment.stackupProviderUrl,
+      { paymasterMiddleware }
+    )
+    const client = await Client.init(environment.stackupProviderUrl);
+
+    const target = ethers.utils.getAddress(data.to);
+    const value = ethers.utils.parseEther(data.amount);
+    const res = await client.sendUserOperation(
+      sa.execute(target, value, "0x"),
+      {
+        dryRun: false,
+        onBuild: (op) => console.log("Signed UserOperation:", op),
+      }
+    );
+
+    return await res.wait();
+  }
+
+  async sendERC20(coin: any, data: { amount: string; to: string; selectedFee: string }) {
+    const paymasterMiddleware = Presets.Middleware.verifyingPaymaster(
+      environment.stackuPaymasterConfig.rpcUrl,
+      environment.stackuPaymasterConfig.context,
+    );
+
+    const op = new UserOperationBuilder().useMiddleware(paymasterMiddleware).useDefaults({
+      sender: ethers.utils.getAddress(this.walletSC.address),
+      preVerificationGas: 100_000,
+      maxFeePerGas: 1_000_105_660,
+    });
+
+    const coinSC = new ethers.Contract(coin.address, erc20Abi, this.walletOwner);
+    const callData = this.walletSC.interface.encodeFunctionData("execute", [
+      coin.address,
+      ethers.constants.Zero,
+      coinSC.interface.encodeFunctionData("transfer", [
+        data.to,
+        ethers.utils.parseUnits(data.amount, coin.decimals)
+      ])
+    ]);
+    op.setCallData(callData);
+
+
+    const entrypointSC = new ethers.Contract(environment.entrypointSC, EntrypointAbi, this.walletOwner);
+    const message = await entrypointSC['getUserOpHash'](op.getOp());
+    const msg1 = Buffer.concat([
+      Buffer.from('\x19Ethereum Signed Message:\n32', 'ascii'),
+      Buffer.from(arrayify(message))
+    ])
+
+    const sig = ecsign(keccak256_buffer(msg1), Buffer.from(arrayify(this.walletOwner.privateKey)))
+    // that's equivalent of:  await signer.signMessage(message);
+    // (but without "async"
+    const signature = toRpcSig(sig.v, sig.r, sig.s);
+    op.setSignature(signature);
+
+    const nonce = await this.provider.getTransactionCount(this.walletSC.address);
+    op.setNonce(nonce);
+
+    const currOp = op.getOp();
+
+    const arr = [[
+      currOp.sender,
+      currOp.nonce,
+      currOp.initCode,
+      currOp.callData,
+      currOp.callGasLimit,
+      currOp.verificationGasLimit,
+      currOp.preVerificationGas,
+      currOp.maxFeePerGas,
+      currOp.maxPriorityFeePerGas,
+      currOp.paymasterAndData,
+      currOp.signature
+    ]];
+
+    const client = await Client.init(environment.stackupProviderUrl);
+    const res = await client.sendUserOperation(
+      op,
+      {
+        dryRun: false,
+        onBuild: (op) => console.log("Signed UserOperation:", op),
+      }
+    );
+    return await res.wait();
+  }
+
+  async getERC20Balance(coin: any): Promise<string> {
+    const contract = new ethers.Contract(coin.address, erc20Abi, this.walletOwner);
+    const balance =  await contract['balanceOf'](this.walletSC.address);
+    return ethers.utils.formatUnits(balance, coin.decimals);
   }
 }

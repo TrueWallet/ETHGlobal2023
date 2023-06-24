@@ -1,0 +1,29 @@
+<h3 mat-dialog-title>Send {{ticker}}</h3>
+<div mat-dialog-content style="padding-top: 16px">
+  <mat-form-field appearance="outline">
+    <mat-label>Address</mat-label>
+    <input matInput type="text" [(ngModel)]="data.to">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Amount</mat-label>
+    <input matInput type="text" [(ngModel)]="data.amount">
+    <mat-hint>Balance: {{balance$ | async}} {{ticker}}</mat-hint>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Fee option</mat-label>
+    <mat-select [(ngModel)]="data.selectedFee">
+      <mat-option *ngFor="let item of feeOptions" [value]="item.type">
+        {{item.label}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button *ngIf="coin" [disabled]="loading" mat-flat-button color="primary" (click)="sendERC20()">Send</button>
+  <button *ngIf="!coin" [disabled]="loading" mat-flat-button color="primary" (click)="send()">Send</button>
+
+
+  <button [disabled]="loading" mat-dialog-close mat-stroked-button color="warn">Cancel</button>
+</div>

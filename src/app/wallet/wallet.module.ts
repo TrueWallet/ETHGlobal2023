@@ -5,7 +5,7 @@ import { WalletRoutingModule } from './wallet-routing.module';
 import { WalletBaseComponent } from './pages/wallet-base/wallet-base.component';
 import { WalletComponent } from './pages/wallet/wallet.component';
 import { WalletGuardiansComponent } from './pages/wallet-guardians/wallet-guardians.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,13 +17,16 @@ import { ClipboardModule } from "@angular/cdk/clipboard";
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { SendComponent } from './partials/send/send.component';
+import {MatSelectModule} from "@angular/material/select";
 
 
 @NgModule({
   declarations: [
     WalletBaseComponent,
     WalletComponent,
-    WalletGuardiansComponent
+    WalletGuardiansComponent,
+    SendComponent
   ],
   imports: [
     CommonModule,
@@ -38,7 +41,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     ClipboardModule,
     MatSidenavModule,
     MatToolbarModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSelectModule,
+    FormsModule
   ],
 
   providers:[
