@@ -10,6 +10,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { WalletService } from './services/wallet.service';
+import {MatCardModule} from "@angular/material/card";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatTableModule} from "@angular/material/table";
 
 
 @NgModule({
@@ -24,7 +27,10 @@ import { WalletService } from './services/wallet.service';
     ReactiveFormsModule,
     MatInputModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatTableModule
   ],
   providers:[
     WalletService

@@ -9,4 +9,5 @@ export const environment = {
     context: {
     }
   },
+  supportedERC20: []
 };

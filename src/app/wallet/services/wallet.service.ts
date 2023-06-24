@@ -10,6 +10,7 @@ import {EntrypointAbi} from "../../core/constants/abis/entrypoint-abi";
 import { ecsign, toRpcSig, keccak256 as keccak256_buffer } from 'ethereumjs-util';
 import { Buffer } from 'buffer';
 import {arrayify} from "ethers/lib/utils";
+import {erc20Abi} from "../../core/constants/abis/erc20-abi";
 
 // @ts-ignore
 window.Buffer = Buffer;
@@ -117,5 +118,13 @@ export class WalletService {
       console.log(error)
     }
     
+  }
+
+  async getBalancesERC20(supportedERC20: any[]): Promise<any> {
+    return Promise.all(supportedERC20.map(async (erc20) => {
+      const contract = new ethers.Contract(erc20.address, erc20Abi, this.walletOwner);
+      const balance = await contract['balanceOf'](this.walletSC.address);
+      return { ...erc20, balance: ethers.utils.formatUnits(balance, erc20.decimals) };
+    }));
   }
 }
