@@ -2,10 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CreateWalletRoutingModule } from './create-wallet-routing.module';
+import { CreateWalletComponent } from './pages/create-wallet/create-wallet.component';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    CreateWalletComponent
+  ],
   imports: [
     CommonModule,
     CreateWalletRoutingModule
