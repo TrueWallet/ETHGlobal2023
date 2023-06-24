@@ -74,6 +74,15 @@ export class WalletService {
     }));
   }
 
+  async cancelGuardian(item: any): Promise<any> {
+    const owner = await this.walletSC['owner']();
+
+    console.log('Wallet SC Owner', owner);
+
+    const response = await this.walletSC['cancelRecovery'](item.hash, {gasLimit: 1_000_000});
+    return response.wait();
+  }
+
   async isDeployed(): Promise<WalletState> {
     const code = await this.provider.getCode(this.walletSC.address);
     return code !== '0x' ? WalletState.READY : WalletState.NEED_DEPLOY;

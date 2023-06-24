@@ -42,4 +42,17 @@ export class WalletGuardiansComponent {
       this.guardianControl.reset();
     })
   }
+
+  cancel(item: any) {
+    this.loading = true;
+    from(this.service.cancelGuardian(item)).pipe(
+      catchError((err) => {
+        console.dir(err);
+        return throwError(() => err);
+      }),
+      finalize(() => this.loading = false)
+    ).subscribe(() => {
+      this.reload$$.next();
+    })
+  }
 }
