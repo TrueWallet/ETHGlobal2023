@@ -1,3 +1,4 @@
+import { CreateWalletService } from './services/create-wallet.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -12,6 +13,9 @@ import { CreateWalletComponent } from './pages/create-wallet/create-wallet.compo
   imports: [
     CommonModule,
     CreateWalletRoutingModule
+  ],
+  providers: [
+    CreateWalletService
   ]
 })
 export class CreateWalletModule { }
