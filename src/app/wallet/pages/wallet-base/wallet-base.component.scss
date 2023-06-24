@@ -1,0 +1,75 @@
+.mat-toolbar {
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+  
+      font-size: 24px;
+      text-decoration: none;
+      color: #333;
+    }
+  
+    .wallet-address {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  
+  }
+  
+  .wallet-container {
+    height: calc(100% - 64px);
+  }
+  
+  .mat-drawer {
+    width: 300px;
+  
+    .balance {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+      padding: 24px;
+  
+      h3 {
+        margin-top: 0;
+      }
+    }
+  
+    &-content {
+      main {
+        padding: 24px;
+      }
+    }
+  }
+  
+  .sidebar {
+    &-data {
+      padding: 24px;
+  
+      .menu {
+        padding: 0;
+        list-style: none;
+  
+        li {
+          margin-bottom: 16px;
+        }
+  
+        a {
+          font-size: 21px;
+          line-height: 1.3;
+          color: #333;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+  
+          &.current {
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+  

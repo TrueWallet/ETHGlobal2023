@@ -66,6 +66,12 @@ export class WalletService {
     return code !== '0x' ? WalletState.READY : WalletState.NEED_DEPLOY;
   }
 
+
+  async getNativeBalance(): Promise<string> {
+    const balance =  await this.provider.getBalance(this.walletSC.address);
+    return ethers.utils.formatEther(balance.toString());
+  }
+
   async deployWallet(): Promise<any> {
     const client = await Client.init(environment.stackupProviderUrl, {entryPoint: environment.entrypointSC});
 
