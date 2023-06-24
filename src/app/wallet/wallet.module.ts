@@ -17,6 +17,7 @@ import { ClipboardModule } from "@angular/cdk/clipboard";
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     ClipboardModule,
     MatSidenavModule,
     MatToolbarModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
   ],
 
   providers:[

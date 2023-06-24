@@ -76,7 +76,7 @@ export class CreateWalletService{
             [provider.getSigner().getAddress()],
             provider.getSigner().getAddress(),
             1,
-            1
+            walletSC['nonce']()
         );
 
         const confirmResponse = await walletSC['confirmRecovery'](recoveryHash);
