@@ -1,1 +1,29 @@
-<p>wallet-guardians works!</p>
+<h2>Add Guardians:</h2>
+<form [formGroup]="form">
+  <mat-form-field class="control" appearance="outline">
+    <mat-label>Wallet address</mat-label>
+    <input type="email" matInput [formControl]="guardianControl">
+    <button type="button" [disabled]="loading" matSuffix mat-icon-button aria-label="Clear" (click)="addGuardian()">
+      <mat-icon *ngIf="!loading">add</mat-icon>
+      <mat-icon *ngIf="loading">hourglass_empty</mat-icon>
+    </button>
+  </mat-form-field>
+</form>
+
+<div class="guardians">
+  <h3>Added Guardians:</h3>
+
+  <ng-container *ngIf="guardians$ | async as guardians">
+    <div class="guardians-list" *ngIf="guardians.length else empty">
+      <div *ngFor="let item of guardians">
+        {{item.guardian}}
+      </div>
+    </div>
+
+    <ng-template #empty>
+      <div class="empty-guardians">
+        <p>No guardians added yet</p>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>

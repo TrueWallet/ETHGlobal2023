@@ -5,6 +5,11 @@ import { WalletRoutingModule } from './wallet-routing.module';
 import { WalletBaseComponent } from './pages/wallet-base/wallet-base.component';
 import { WalletComponent } from './pages/wallet/wallet.component';
 import { WalletGuardiansComponent } from './pages/wallet-guardians/wallet-guardians.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { WalletService } from './services/wallet.service';
 
 
 @NgModule({
@@ -15,7 +20,14 @@ import { WalletGuardiansComponent } from './pages/wallet-guardians/wallet-guardi
   ],
   imports: [
     CommonModule,
-    WalletRoutingModule
+    WalletRoutingModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule
+  ],
+  providers:[
+    WalletService
   ]
 })
 export class WalletModule { }
