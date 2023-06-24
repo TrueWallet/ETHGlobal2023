@@ -1,8 +1,18 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { ethers } from 'ethers';
+import {BigNumber, ethers} from 'ethers';
 import { StorageKeys } from 'src/app/core/constants/storage-keys';
 import { WalletAbi } from 'src/app/core/constants/abis/wallet-abi';
+import {WalletState} from "../constants/wallet-state";
+import {FactoryAbi} from "../../core/constants/abis/factory-abi";
+import {Client, UserOperationBuilder} from "userop";
+import {EntrypointAbi} from "../../core/constants/abis/entrypoint-abi";
+import { ecsign, toRpcSig, keccak256 as keccak256_buffer } from 'ethereumjs-util';
+import { Buffer } from 'buffer';
+import {arrayify} from "ethers/lib/utils";
+
+// @ts-ignore
+window.Buffer = Buffer;
 
 @Injectable()
 export class WalletService {
@@ -10,6 +20,7 @@ export class WalletService {
 
   protected readonly provider: any;
   protected readonly walletSC: ethers.Contract;
+  protected readonly factorySC: ethers.Contract;
 
   get walletAddress(): string {
     return this.walletSC.address;
@@ -24,6 +35,7 @@ export class WalletService {
 
     const walletAddress = localStorage.getItem(StorageKeys.walletAddress);
     this.walletSC = new ethers.Contract(<string>walletAddress, WalletAbi, this.walletOwner);
+    this.factorySC = new ethers.Contract(environment.factorySC, FactoryAbi, this.walletOwner);
   }
 
   async addGuardian(guardian: string): Promise<any> {
@@ -46,5 +58,55 @@ export class WalletService {
 
       return {guardian, hash, requested, executed};
     }));
+  }
+
+  async isDeployed(): Promise<WalletState> {
+    const code = await this.provider.getCode(this.walletSC.address);
+    return code !== '0x' ? WalletState.READY : WalletState.NEED_DEPLOY;
+  }
+
+  async deployWallet(): Promise<any> {
+    const client = await Client.init(environment.stackupProviderUrl, {entryPoint: environment.entrypointSC});
+
+    const walletAddress = localStorage.getItem(StorageKeys.walletAddress);
+    const fbId = localStorage.getItem(StorageKeys.fbId);
+
+    const args = [
+      this.factorySC.address,
+      environment.entrypointSC,
+      this.walletOwner.address,
+      172800,
+      ethers.utils.keccak256(ethers.utils.hexlify(BigNumber.from(fbId)))
+    ];
+
+    const builder = new UserOperationBuilder().useDefaults({
+      sender: <string>walletAddress,
+      callGasLimit: 2_000_000,
+      verificationGasLimit: 1_500_000,
+      preVerificationGas: 1_000_000,
+      maxFeePerGas: 1_000_105_660,
+      maxPriorityFeePerGas: 1_000_000_000,
+    });
+
+
+    const initCode = await this.factorySC['getInitCode'](...args);
+    builder.setInitCode(initCode);
+
+    const entrypointSC = new ethers.Contract(environment.entrypointSC, EntrypointAbi, this.walletOwner);
+
+    const message = await entrypointSC['getUserOpHash'](builder.getOp());
+    const msg1 = Buffer.concat([
+      Buffer.from('\x19Ethereum Signed Message:\n32', 'ascii'),
+      Buffer.from(arrayify(message))
+    ])
+
+    const sig = ecsign(keccak256_buffer(msg1), Buffer.from(arrayify(this.walletOwner.privateKey)))
+    // that's equivalent of:  await signer.signMessage(message);
+    // (but without "async"
+    const signature = toRpcSig(sig.v, sig.r, sig.s);
+    builder.setSignature(signature);
+
+    const response = await client.sendUserOperation(builder);
+    return await response.wait();
   }
 }

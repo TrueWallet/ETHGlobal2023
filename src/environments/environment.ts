@@ -3,4 +3,10 @@ export const environment = {
   entrypointSC: '',
   rpcProviderUrl: '',
   fbAppId: '',
+  stackupProviderUrl: '',
+  stackuPaymasterConfig: {
+    rpcUrl: "",
+    context: {
+    }
+  },
 };
