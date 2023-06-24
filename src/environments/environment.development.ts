@@ -10,4 +10,27 @@ export const environment = {
        type: "payg"
     }
   },
+  supportedERC20: [
+    {
+      ticker: 'DERC20',
+      name: 'Dummy ERC20',
+      address: '0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1',
+      decimals: 18,
+      icon: null
+    },
+    {
+      ticker: 'USDT',
+      name: 'Tether USD',
+      address: '0xA02f6adc7926efeBBd59Fd43A84f4E0c0c91e832',
+      decimals: 6,
+      icon: null
+    },
+    {
+      ticker: 'USDC',
+      name: 'USD Coin',
+      address: '0x3870419Ba2BBf0127060bCB37f69A1b1C090992B',
+      decimals: 6,
+      icon: null
+    }
+  ]
 };
