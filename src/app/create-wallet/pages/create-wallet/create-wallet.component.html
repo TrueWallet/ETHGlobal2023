@@ -1,2 +1,26 @@
-<button (click)="createWallet()">Facebook</button>
-<button (click)="restoreWallet()">Restore</button>
+<div class="create-wallet">
+  <h1>Create your wallet</h1>
+
+  <div class="social-providers">
+    <mat-card [class.disabled]="loading" (click)="createWallet()">
+      <img src="/assets/images/facebook.svg" alt="">
+      <h4>Facebook</h4>
+    </mat-card>
+
+    <mat-card class="disabled">
+      <div class="badge">Coming Soon</div>
+      <img src="/assets/images/twitter.svg" alt="">
+      <h4>Twitter</h4>
+    </mat-card>
+
+    <mat-card class="disabled">
+      <div class="badge">Coming Soon</div>
+      <img src="/assets/images/google.svg" alt="">
+      <h4>Google</h4>
+    </mat-card>
+  </div>
+
+  <h4>- OR -</h4>
+
+  <button [disabled]="loading" mat-flat-button color="warn" (click)="restoreWallet()">Request Restore existing wallet</button>
+</div>

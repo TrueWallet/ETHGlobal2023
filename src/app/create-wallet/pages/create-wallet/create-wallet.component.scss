@@ -1,0 +1,53 @@
+.create-wallet {
+  text-align: center;
+  padding-top: 64px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.social-providers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 24px;
+  max-width: 800px;
+  padding: 0 24px;
+  margin: 0 auto 64px;
+  text-align: center;
+
+  .mat-mdc-card {
+    padding-top: 24px;
+    position: relative;
+
+    &:not(.disabled) {
+      cursor: pointer;
+    }
+
+    &.disabled {
+      opacity: 0.7;
+      filter: grayscale(50%);
+    }
+
+    .badge {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #0097a7;
+      color: #fff;
+      line-height: 22px;
+      padding: 0 8px;
+      border-radius: 11px;
+      font-size: 12px;
+    }
+  }
+
+  img {
+    width: 100%;
+    max-width: 96px;
+    height: auto;
+    margin: 0 auto;
+  }
+}
