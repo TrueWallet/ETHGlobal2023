@@ -44,7 +44,7 @@ export class CreateWalletService{
       }
 
     /**
-     * Generates the private key based on OAuth 2.0 data
+     * Generates the private key based on OAuth 2.0 data. In the future better to add `pin code` to improve entropy
      * @param app application type, for example: facebook
      * @param id user id
      * @param n wallet number
