@@ -2,7 +2,7 @@
 
 ## UX optimization strategies
 
-* Modified function for private keys generation. Generation based on application type, user id, and wallet number. In this project, we use Facebook as OAuth 2.0 provider. So, the user id is unique for each OAuth 2.0 application and has a length of 16 digits. Brutforce will take a lot of time. Anyway, for security purposes it is good to add a `pin code` to make an entropy stronger. From the user's perspective, it means that his wallet available on all devices and browsers. [Implementation](https://github.com/TrueWallet/ETHGlobal2023/blob/main/src/app/create-wallet/services/create-wallet.service.ts#L52)
+* Modified function for private keys generation. Generation based on application type, application id, user id, and wallet number. In this project, we use Facebook as OAuth 2.0 provider. So, the user id is unique for each OAuth 2.0 application and has a length of 16 digits. Brutforce will take a lot of time. Anyway, for security purposes it is good to add a `pin code` to make an entropy stronger. From the user's perspective, it means that his wallet available on all devices and browsers. [Implementation](https://github.com/TrueWallet/ETHGlobal2023/blob/main/src/app/create-wallet/services/create-wallet.service.ts#L52)
 * Transaction payer. A user could choose how he wants to pay the transaction fee. There are 3 options: native token, ERC20 token, sponsor. [Sponsor implementation](https://github.com/TrueWallet/ETHGlobal2023/blob/main/src/app/wallet/services/wallet.service.ts#L185)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.1.
