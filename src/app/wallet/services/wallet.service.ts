@@ -64,7 +64,8 @@ export class WalletService {
     const guardians = await this.walletSC['getGuardians']();
 
     return Promise.all(guardians.map(async (guardian: string) => {
-      const hash = await this.walletSC['getRecoveryHash']([guardian], guardian, 1, 1);
+      const nonce = await this.walletSC['nonce']();
+      const hash = await this.walletSC['getRecoveryHash']([guardian], guardian, 1, nonce);
       const requested = await this.walletSC['isConfirmedByGuardian'](guardian, hash);
       const executed = await this.walletSC['isExecuted'](hash);
 
