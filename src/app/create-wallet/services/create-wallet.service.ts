@@ -43,14 +43,20 @@ export class CreateWalletService{
         });
       }
 
-    private getOwnerPk(app: string, id: string): any {
+    /**
+     * Generates the private key based on OAuth 2.0 data
+     * @param app application type, for example: facebook
+     * @param id user id
+     * @param n wallet number
+    **/
+    private getOwnerPk(app: string, id: string, n: number = 1): any {
         let pk = localStorage.getItem(StorageKeys.ownerPk);
         if (!pk) {
           const entropy = arrayify(hexDataSlice(keccak256(concat([
             ethers.utils.hexlify(ethers.utils.toUtf8Bytes(app)),
             ethers.utils.hexlify(ethers.utils.toUtf8Bytes(id)),
             ethers.utils.hexlify(ethers.utils.toUtf8Bytes(environment.fbAppId)),
-            ethers.utils.hexlify(1),
+            ethers.utils.hexlify(n),
           ])), 0, 16));
     
           const mnemonic = ethers.utils.entropyToMnemonic(entropy);
